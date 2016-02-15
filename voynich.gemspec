@@ -9,9 +9,9 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Kazunori Kajihiro"]
   spec.email         = ["likerichie@gmail.com"]
 
-  spec.summary       = %q{TODO: Write a short summary, because Rubygems requires one.}
-  spec.description   = %q{TODO: Write a longer description or delete this line.}
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.summary       = "KMS backed secret management library"
+  spec.description   = "KMS backed secret management library"
+  spec.homepage      = "https://github.com/degica/voynich"
 
   # Prevent pushing this gem to RubyGems.org by setting 'allowed_push_host', or
   # delete this section to allow pushing this gem to any host.
@@ -29,4 +29,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "bundler", "~> 1.10"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec"
+  spec.add_dependency "aws-sdk"
+  spec.add_dependency "activesupport"
+  spec.add_dependency "activerecord"
 end
