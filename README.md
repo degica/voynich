@@ -1,8 +1,6 @@
 # Voynich
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/voynich`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Voynich is a secret storage library for Ruby on Rails backed by Amazon Key Management Service (KMS)
 
 ## Installation
 
@@ -19,18 +17,36 @@ And then execute:
 Or install it yourself as:
 
     $ gem install voynich
+    
+## Configuration
+
+Add this code to your initializer
+
+```ruby
+Voynich.configure(
+  aws_access_key_id: 'aakid',
+  aws_secret_access_key: 'asak',
+  kms_cmk_id: 'cmk_id'
+)
+```
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+## Create new encrypted data
+### `create` method creates a new data key using KMS API and save the encrypted version of the key,
+### then encrypt the plain value passed as an argument, save it, and return the UUID of the saved value
+uuid = Voynich::Storage.new.create({credit_card: {number: "411111111111"}})
+# => "131cd6e8-03da-48f7-bf99-672429c94e3f"
 
-## Development
+## Get decrypted data
+### decrypting can be done by passing the UUID to `decrypt` method
+data = Voynich::Storage.new.decrypt(uuid)
+# => {credit_card: {number: "411111111111"}}
+```
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+## TODO
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
-
-## Contributing
-
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/voynich.
-
+- [] Data key rotation
+- [] Path based tree structure
+- [] S3 adapter
