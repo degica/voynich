@@ -1,4 +1,13 @@
 language: ruby
-rvm:
-  - 2.2.3
 before_install: gem install bundler -v 1.10.6
+sudo: false
+cache:
+  bundler: true
+rvm:
+- 2.2
+- 2.3.0
+script:
+- bundle exec rspec
+notifications:
+  slack:
+    secure: R7BJ/vBOyKyqZrR999aArVourPQRixkA7CjUTl27hC4aZyO/XXwImcNovn+P+1d/R6mJ7yPBV4sTchga+AEhieNlOp/v2vBuQUi44li7GgIU5s/tgah+hgXpmgZE84cP0XcdubAMR7467YHlU/XvpCjtvVYFt1wAaVKGmftum1YP84GVOKnd4b1qFncJp4IIJDlMWOe8BxWWTkThWEhaYT+hGEO/mfGTNZiawHlsMFFedxZaXLqh2QVNeulfYYNhcyOdHDF0E8WBwvYOk/NyfW/prISPA64CJAAgglnQzXUdzhDJobbDcsl0c07J/7P+SDXhxzielPia0pV7IP+1htQs2OxKGdYuxF6hXr0VbWnBXP1vKP0yaxdaoI6mZG5Fm7m+D5IFbBlRvgZjd15IO3ThdykFbse9wRva5OSNcEB4HbqwsuqvojnqkgyJaHxQ29KucuFdHFfONdFZsCYezsNR9aPhA3jRbrGmY/vFY6mwcTmBi+p7+63xhPRXpuPTv+CKhoO0ZRN/w2avC2+jsFZDjR7o50QcFgPvYs6m0fENfvh03ubjMyKcS2y7A5gwpypzC9lkagkI8sE4Wna1iZnknHG5nBCkSPtd7/MGC7G0aiyikHlXf/4S/j0D9k9Pr0t+8ojnQWM0nfawoNpqBjwTpB561debYplpYlp/T4I=
