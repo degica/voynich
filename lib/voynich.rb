@@ -1,6 +1,7 @@
 require "voynich/version"
 require "voynich/active_record"
 require "voynich/kms_data_key_client"
+require "voynich/active_model/model"
 require "voynich/storage"
 require "voynich/aes"
 
