@@ -51,6 +51,29 @@ data = Voynich::Storage.new.decrypt(uuid)
 # => {credit_card: {number: "411111111111"}}
 ```
 
+### ActiveModel integration
+
+```ruby
+class SomeModel < ActiveRecord::Base
+  include Voynich::ActiveModel::Model
+  
+  voynich_attribute :secret_data
+end
+
+model = SomeModel.new
+# You can assign any type of data
+model.secret_data = {card_number: '1234567890123456'}
+
+# when the model is saved, encrypted data and key is created
+model.save
+
+# You can see the UUID of the voynich data is assigned
+model.voynich_secret_data_uuid # => "131cd6e8-03da-48f7-bf99-672429c94e3f"
+
+# You can get decrypted data just like a normal attribute
+model.secret_data # => {card_number: '1234567890123456'}
+```
+
 ## TODO
 
 - [] Data key rotation
