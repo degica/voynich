@@ -7,10 +7,10 @@ module Voynich::ActiveRecord
         'plaintext-data-key-generated-by-amazon-kms'
       }
       allow_any_instance_of(Voynich::KMSDataKeyClient).to receive(:ciphertext) {
-        "encrypted-data-key#{SecureRandom.hex}"
+        "encrypted-data-key"
       }
       allow_any_instance_of(Voynich::KMSDataKeyClient).to receive(:reencrypt) {
-        "encrypted-data-key#{SecureRandom.hex}"
+        "encrypted-data-key-new"
       }
     end
 
@@ -18,9 +18,8 @@ module Voynich::ActiveRecord
       let(:data_key) { DataKey.create!(name: 'data_key', cmk_id: Voynich.kms_cmk_id) }
 
       it "re-encrypt and save ciphertext" do
-        before = data_key.ciphertext
         data_key.reencrypt!
-        expect(data_key.ciphertext).to_not eq before
+        expect(data_key.ciphertext).to eq "encrypted-data-key-new"
       end
     end
   end
