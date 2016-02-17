@@ -16,10 +16,6 @@ module Voynich
       before_validation :generate_uuid, on: :create
       before_validation :encrypt
 
-      def generate_uuid
-        self.uuid = SecureRandom.uuid
-      end
-
       def decrypt
         encrypted_data = JSON.parse(self.ciphertext, symbolize_names: true)
         @plain_value = AES.new(data_key.plaintext, (context || {}).to_json).decrypt(
@@ -38,6 +34,12 @@ module Voynich
           iv: encrypted[:iv],
           ad: encrypted[:auth_data]
         }.to_json
+      end
+
+      private
+
+      def generate_uuid
+        self.uuid ||= SecureRandom.uuid
       end
     end
   end
