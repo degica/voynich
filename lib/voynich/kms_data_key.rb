@@ -12,7 +12,7 @@ module Voynich
     end
 
     def ciphertext
-      @ciphertext ||= Base64.strict_encode64(data_key.ciphertext_blob)
+      @ciphertext ||= Base64.strict_encode64(generate_data_key.ciphertext_blob)
     end
 
     def reencrypt
@@ -24,10 +24,10 @@ module Voynich
     private
 
     def fetch_plaintext_data_key
-      decrypt_data_key || data_key.plaintext
+      decrypt_data_key || generate_data_key.plaintext
     end
 
-    def data_key
+    def generate_data_key
       @data_key ||= kms_client.generate_data_key(key_id: cmk_id, key_spec: 'AES_256')
     end
 
