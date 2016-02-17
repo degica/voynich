@@ -12,19 +12,19 @@ module Voynich
       before_validation :generate_data_key, if: -> (m) { m.ciphertext.nil? }
 
       def generate_data_key
-        self.ciphertext = data_key.ciphertext
+        self.ciphertext = kms_data_key_client.ciphertext
       end
 
-      def data_key
-        @data_key ||= KMSDataKeyClient.new(cmk_id: cmk_id, ciphertext: ciphertext)
+      def kms_data_key_client
+        @kms_data_key_client ||= KMSDataKeyClient.new(cmk_id: cmk_id, ciphertext: ciphertext)
       end
 
       def plaintext
-        data_key.plaintext
+        kms_data_key_client.plaintext
       end
 
       def reencrypt!
-        self.ciphertext = data_key.reencrypt
+        self.ciphertext = kms_data_key_client.reencrypt
         save!
       end
     end
