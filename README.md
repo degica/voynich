@@ -18,6 +18,11 @@ Or install it yourself as:
 
     $ gem install voynich
     
+### Generate Migration File
+
+    $ rails g voynich:active_record
+    $ rake db:migrate
+    
 ## Configuration
 
 Add this code to your initializer
@@ -26,7 +31,8 @@ Add this code to your initializer
 Voynich.configure(
   aws_access_key_id: 'aakid',
   aws_secret_access_key: 'asak',
-  kms_cmk_id: 'cmk_id'
+  kms_cmk_id: 'cmk_id',
+  aws_region: 'us-east-1'
 )
 ```
 
