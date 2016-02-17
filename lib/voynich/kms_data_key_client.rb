@@ -1,5 +1,5 @@
 module Voynich
-  class KMSDataKey
+  class KMSDataKeyClient
     attr_reader :cmk_id
 
     def initialize(cmk_id:, ciphertext: nil)

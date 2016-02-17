@@ -3,13 +3,13 @@ require 'spec_helper'
 module Voynich::ActiveRecord
   describe DataKey do
     before do
-      allow_any_instance_of(Voynich::KMSDataKey).to receive(:plaintext) {
+      allow_any_instance_of(Voynich::KMSDataKeyClient).to receive(:plaintext) {
         'plaintext-data-key-generated-by-amazon-kms'
       }
-      allow_any_instance_of(Voynich::KMSDataKey).to receive(:ciphertext) {
+      allow_any_instance_of(Voynich::KMSDataKeyClient).to receive(:ciphertext) {
         "encrypted-data-key#{SecureRandom.hex}"
       }
-      allow_any_instance_of(Voynich::KMSDataKey).to receive(:reencrypt) {
+      allow_any_instance_of(Voynich::KMSDataKeyClient).to receive(:reencrypt) {
         "encrypted-data-key#{SecureRandom.hex}"
       }
     end

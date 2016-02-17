@@ -5,7 +5,7 @@ module Voynich::ActiveRecord
     let(:data_key) { DataKey.create!(name: 'data_key', cmk_id: Voynich.kms_cmk_id) }
 
     before do
-      allow(Voynich::KMSDataKey).to receive(:new) {
+      allow(Voynich::KMSDataKeyClient).to receive(:new) {
         double(
           plaintext: 'plaintext-data-key-generated-by-amazon-kms',
           ciphertext: 'encrypted-data-key'

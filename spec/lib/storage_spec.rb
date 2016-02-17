@@ -3,7 +3,7 @@ require 'spec_helper'
 module Voynich
   describe Storage do
     before do
-      allow(KMSDataKey).to receive(:new) {
+      allow(KMSDataKeyClient).to receive(:new) {
         double(
           plaintext: 'plaintext-data-key-generated-by-amazon-kms',
           ciphertext: 'encrypted-data-key'

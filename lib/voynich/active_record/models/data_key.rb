@@ -16,7 +16,7 @@ module Voynich
       end
 
       def data_key
-        @data_key ||= KMSDataKey.new(cmk_id: cmk_id, ciphertext: ciphertext)
+        @data_key ||= KMSDataKeyClient.new(cmk_id: cmk_id, ciphertext: ciphertext)
       end
 
       def plaintext
