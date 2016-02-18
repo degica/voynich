@@ -2,21 +2,27 @@ require 'spec_helper'
 
 module Voynich
   describe Storage do
+    let(:storage) { Storage.new }
     before do
-      allow(KMSDataKeyClient).to receive(:new) {
-        double(
-          plaintext: 'plaintext-data-key-generated-by-amazon-kms',
-          ciphertext: 'encrypted-data-key'
-        )
-      }
+      stub_kms_request
     end
 
-    describe "encrypt and decrypt" do
-      it "encrypts plaintext and decrypt ciphertext" do
-        uuid = Storage.new.create({foo: "plaintext"})
+    describe "#encrypt" do
+      it "creates an auto key and a value" do
+        uuid = storage.create({foo: "value"})
+        expect(uuid).to be_a String
+        expect(ActiveRecord::DataKey.last).to be_present
+        value = ActiveRecord::Value.find_by(uuid: uuid)
+        expect(value.decrypt).to eq({foo: "value"})
+      end
+    end
+
+    describe "#decrypt" do
+      it "decrypts the encrypted data" do
+        uuid = Storage.new.create({foo: "value"})
         data = Storage.new.decrypt(uuid)
 
-        expect(data).to eq({foo: "plaintext"})
+        expect(data).to eq({foo: "value"})
       end
     end
 
