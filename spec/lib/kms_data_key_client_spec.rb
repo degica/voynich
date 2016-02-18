@@ -2,43 +2,40 @@ require 'spec_helper'
 
 module Voynich
   describe KMSDataKeyClient do
+    let(:kms_data_key_client) { KMSDataKeyClient.new("cmk_id") }
+
     before do
-      allow(kms_data_key).to receive(:kms_client) do
+      allow(Voynich).to receive(:kms_client) do
         client = Aws::KMS::Client.new(stub_responses: true)
         client.stub_responses(:generate_data_key,
                               plaintext: 'generated plaintext blob',
                               ciphertext_blob: 'generated ciphertext blob')
         client.stub_responses(:decrypt, plaintext: 'decrypted plaintext blob')
+        client.stub_responses(:re_encrypt, ciphertext_blob: 'reencrypted ciphertext blob')
         client
       end
     end
 
-    describe "#plaintext" do
-      subject { kms_data_key.plaintext }
-
-      context "when cmk_id is passed" do
-        let(:kms_data_key) { KMSDataKeyClient.new(cmk_id: "cmk_id") }
-        it { is_expected.to eq Base64.strict_encode64('generated plaintext blob') }
-      end
-
-      context "when encrypted_data_key is passed" do
-        let(:kms_data_key) { KMSDataKeyClient.new(cmk_id: "cmk_id", ciphertext: Base64.strict_encode64('encrypted data key')) }
-        it { is_expected.to eq Base64.strict_encode64('decrypted plaintext blob') }
-      end
+    def result(plain_blob, cipher_blob)
+      plain  = plain_blob.nil?  ? nil : Base64.strict_encode64(plain_blob)
+      cipher = cipher_blob.nil? ? nil : Base64.strict_encode64(cipher_blob)
+      described_class::Result.new(plain, cipher)
     end
 
-    describe "#encrypted_data_key" do
-      subject { kms_data_key.ciphertext }
+    describe "#generate" do
+      subject { kms_data_key_client.generate }
 
-      context "when encrypted data key is not passed to initializer" do
-        let(:kms_data_key) { KMSDataKeyClient.new(cmk_id: "cmk_id") }
-        it { is_expected.to eq Base64.strict_encode64('generated ciphertext blob') }
-      end
+      it { is_expected.to eq result("generated plaintext blob", "generated ciphertext blob") }
+    end
 
-      context "when encrypted data key is passed to initializer" do
-        let(:kms_data_key) { KMSDataKeyClient.new(cmk_id: "cmk_id", ciphertext: Base64.strict_encode64('encrypted data key')) }
-        it { is_expected.to eq Base64.strict_encode64('encrypted data key') }
-      end
+    describe "#decrypt" do
+      subject { kms_data_key_client.decrypt(Base64.strict_encode64("ciphertext blob")) }
+      it { is_expected.to eq result("decrypted plaintext blob", "ciphertext blob") }
+    end
+
+    describe "#reencrypt" do
+      subject { kms_data_key_client.reencrypt("old encoded ciphertext") }
+      it { is_expected.to eq result(nil, "reencrypted ciphertext blob") }
     end
   end
 end

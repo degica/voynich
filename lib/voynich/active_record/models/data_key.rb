@@ -3,6 +3,8 @@ module Voynich
     class DataKey < ::ActiveRecord::Base
       self.table_name_prefix = 'voynich_'
 
+      attr_writer :plaintext
+
       has_many :values, class_name: "Voynich::ActiveRecord::Value"
 
       validates :name, presence: true, uniqueness: true
@@ -11,23 +13,38 @@ module Voynich
 
       before_validation :generate_data_key, if: -> (m) { m.ciphertext.nil? }
 
-      def plaintext
-        kms_data_key_client.plaintext
+      def reencrypt!
+        result = client.reencrypt(ciphertext)
+        self.ciphertext = result.ciphertext
+        save!
       end
 
-      def reencrypt!
-        self.ciphertext = kms_data_key_client.reencrypt
-        save!
+      def plaintext
+        return @plaintext unless @plaintext.nil?
+        if ciphertext.nil?
+          generate_data_key
+        else
+          decrypt_data_key
+        end
+        @plaintext
       end
 
       private
 
-      def kms_data_key_client
-        @kms_data_key_client ||= KMSDataKeyClient.new(cmk_id: cmk_id, ciphertext: ciphertext)
+      def client
+        KMSDataKeyClient.new(cmk_id)
       end
 
       def generate_data_key
-        self.ciphertext = kms_data_key_client.ciphertext
+        result = client.generate
+        self.ciphertext = result.ciphertext
+        self.plaintext  = result.plaintext
+      end
+
+      def decrypt_data_key
+        result = client.decrypt(ciphertext)
+        self.ciphertext = result.ciphertext
+        self.plaintext  = result.plaintext
       end
     end
   end
