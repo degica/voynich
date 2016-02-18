@@ -6,5 +6,3 @@ def establish_connection
 end
 
 establish_connection
-
-load File.dirname(__FILE__) + '/schema.rb'

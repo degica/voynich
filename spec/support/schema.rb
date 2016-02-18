@@ -1,3 +1,4 @@
+require File.dirname(__FILE__) + '/active_record.rb'
 ActiveRecord::Schema.define do
   self.verbose = false
 

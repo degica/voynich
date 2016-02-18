@@ -2,9 +2,11 @@ $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 require 'voynich'
 require 'database_cleaner'
 
-load File.dirname(__FILE__) + "/support/active_record.rb"
+Dir[File.dirname(__FILE__) + "/support/**/*.rb"].each { |f| require f }
 
 RSpec.configure do |config|
+  config.include Voynich::SpecSupport::StubKMS
+
   config.before(:suite) do
     DatabaseCleaner.strategy = :transaction
     DatabaseCleaner.clean_with(:truncation)
