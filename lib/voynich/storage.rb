@@ -26,6 +26,8 @@ module Voynich
       value.decrypt
     end
 
+    private
+
     def fetch_data_key(key_name)
       ActiveRecord::DataKey.find_or_create_by!(name: key_name, cmk_id: Voynich.kms_cmk_id)
     end
