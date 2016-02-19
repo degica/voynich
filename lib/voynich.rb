@@ -47,5 +47,12 @@ module Voynich
     end
   end
 
+  def rotate_all_data_keys
+    ActiveRecord::DataKey.find_each do |data_key|
+      data_key.rotate!
+      sleep 0.1 # KMS limits API access up to 100 calls/sec
+    end
+  end
+
   self.configure
 end
