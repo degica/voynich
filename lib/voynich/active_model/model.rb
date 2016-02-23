@@ -6,11 +6,9 @@ module Voynich
       extend ActiveSupport::Concern
 
       included do
+        delegate :voynich_targets, to: :class
+        delegate :voynich_column_name, to: :class
         before_save :voynich_store_attributes
-      end
-
-      def voynich_targets
-        self.class.voynich_targets
       end
 
       def voynich_context(name)
@@ -20,11 +18,6 @@ module Voynich
         else
           {}
         end
-      end
-
-      def voynich_column_name(name)
-        options = voynich_targets[name.to_sym]
-        "#{options[:column_prefix]}#{name}#{options[:column_suffix]}"
       end
 
       def voynich_store_attributes
@@ -52,6 +45,11 @@ module Voynich
       module ClassMethods
         def voynich_targets
           @voynich_targets ||= {}
+        end
+
+        def voynich_column_name(name)
+          options = voynich_targets[name.to_sym]
+          "#{options[:column_prefix]}#{name}#{options[:column_suffix]}"
         end
 
         def voynich_attribute(name, options = {})
