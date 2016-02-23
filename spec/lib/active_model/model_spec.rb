@@ -3,6 +3,9 @@ require 'spec_helper'
 module Voynich::ActiveModel
   class Target
     include ::ActiveModel::Model
+
+    def self.belongs_to(*args); end
+
     def self.before_save(method, options={})
       @@before_save_callbacks[method.to_sym] = options
     end
@@ -20,8 +23,8 @@ module Voynich::ActiveModel
 
     include Model
 
-    attr_accessor :voynich_secret_uuid
-    attr_accessor :voynich_auth_secret_uuid
+    attr_accessor :voynich_secret_value
+    attr_accessor :voynich_auth_secret_value
     voynich_attribute :secret
     voynich_attribute :auth_secret, context: ->(m) { m.uuid }
   end
@@ -60,7 +63,7 @@ module Voynich::ActiveModel
       it "can decrypt the attribute" do
         target.save
 
-        reloaded_target = Target.new(voynich_secret_uuid: target.voynich_secret_uuid)
+        reloaded_target = Target.new(voynich_secret_value: target.voynich_secret_value)
         expect(reloaded_target.secret).to eq "super secret information"
       end
 
@@ -70,7 +73,7 @@ module Voynich::ActiveModel
           expect(target.auth_secret).to eq "authenticated secret"
           target.save
 
-          value = Voynich::ActiveRecord::Value.find_by(uuid: target.voynich_auth_secret_uuid)
+          value = target.voynich_auth_secret_value
           value.context = target.uuid
           expect(value.decrypt).to eq "authenticated secret"
         end
@@ -82,7 +85,7 @@ module Voynich::ActiveModel
           target.auth_secret = "yet another authenticated secret"
           target.save
 
-          value = Voynich::ActiveRecord::Value.find_by(uuid: target.voynich_auth_secret_uuid)
+          value = target.voynich_auth_secret_value
           value.context = target.uuid
           expect(value.decrypt).to eq "yet another authenticated secret"
         end

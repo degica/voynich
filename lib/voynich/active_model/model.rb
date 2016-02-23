@@ -26,20 +26,23 @@ module Voynich
           next if iv.nil?
 
           column_name = voynich_column_name(name)
-          uuid = send(column_name)
-          storage = Voynich::Storage.new
           context = voynich_context(name)
-          if uuid.nil?
-            send("#{column_name}=", storage.create(iv, context: context))
+          value = send(column_name)
+          if value.nil?
+            value = Voynich::ActiveRecord::Value.create!(plain_value: iv, context: context)
+            send("#{column_name}=", value)
           else
-            storage.update(uuid, iv, context: context)
+            value.context = context
+            value.plain_value = iv
+            value.save!
           end
         end
       end
 
       VOYNICH_DEFAULT_OPTIONS = {
         column_prefix: 'voynich_',
-        column_suffix: '_uuid'
+        column_suffix: '_value',
+        context: nil
       }
 
       module ClassMethods
@@ -55,14 +58,19 @@ module Voynich
         def voynich_attribute(name, options = {})
           options = VOYNICH_DEFAULT_OPTIONS.merge(options)
           voynich_targets[name.to_sym] = options
+          asoc_options = options.
+                         merge(class_name: "::Voynich::ActiveRecord::Value").
+                         reject{|k| VOYNICH_DEFAULT_OPTIONS.keys.include? k}
+
+          belongs_to :"#{voynich_column_name(name)}", asoc_options
 
           define_method(name) do
-            uuid = send(voynich_column_name(name))
+            value = send(voynich_column_name(name))
             iv = instance_variable_get(:"@#{name}")
             return iv unless iv.nil?
-            return nil if uuid.nil?
-            storage = Voynich::Storage.new
-            instance_variable_set(:"@#{name}", storage.decrypt(uuid, context: voynich_context(name)))
+            return nil if value.nil?
+            value.context = voynich_context(name)
+            instance_variable_set(:"@#{name}", value.decrypt)
           end
 
           define_method("#{name}=") do |val|
