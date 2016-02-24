@@ -58,6 +58,8 @@ module Voynich
 
           belongs_to :"#{voynich_column_name(name)}", asoc_options
 
+          private :"#{voynich_column_name(name)}="
+
           define_method(name) do
             value = send(voynich_column_name(name))
             iv = instance_variable_get(:"@#{name}")
