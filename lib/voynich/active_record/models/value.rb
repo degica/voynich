@@ -7,10 +7,9 @@ module Voynich
 
       attr_accessor :plain_value, :context
 
-      belongs_to :data_key, class_name: "Voynich::ActiveRecord::DataKey"
+      belongs_to :data_key, required: true, class_name: "Voynich::ActiveRecord::DataKey"
 
       validates :uuid, presence: true, uniqueness: true
-      validates :data_key, presence: true
       validates :ciphertext, presence: true
 
       before_validation :generate_uuid, on: :create
