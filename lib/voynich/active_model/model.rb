@@ -26,16 +26,10 @@ module Voynich
           next if iv.nil?
 
           column_name = voynich_column_name(name)
-          context = voynich_context(name)
-          value = send(column_name)
-          if value.nil?
-            value = Voynich::ActiveRecord::Value.create!(plain_value: iv, context: context)
-            send("#{column_name}=", value)
-          else
-            value.context = context
-            value.plain_value = iv
-            value.save!
-          end
+          value = send(column_name) || send("build_#{column_name}")
+          value.context = voynich_context(name)
+          value.plain_value = iv
+          value.save!
         end
       end
 
