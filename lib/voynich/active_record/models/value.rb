@@ -7,13 +7,13 @@ module Voynich
 
       attr_accessor :plain_value, :context
 
-      belongs_to :data_key, class_name: "Voynich::ActiveRecord::DataKey"
+      belongs_to :data_key, required: true, class_name: "Voynich::ActiveRecord::DataKey"
 
       validates :uuid, presence: true, uniqueness: true
-      validates :data_key, presence: true
       validates :ciphertext, presence: true
 
       before_validation :generate_uuid, on: :create
+      before_validation :find_or_create_data_key
       before_validation :encrypt
 
       def decrypt
@@ -37,6 +37,16 @@ module Voynich
       end
 
       private
+
+      def find_or_create_data_key
+        if data_key.nil?
+          self.data_key = DataKey.find_or_create_by!(name: random_key_name, cmk_id: Voynich.kms_cmk_id)
+        end
+      end
+
+      def random_key_name
+        "auto:#{Random.rand(Voynich.auto_data_key_count)}"
+      end
 
       def generate_uuid
         self.uuid ||= SecureRandom.uuid

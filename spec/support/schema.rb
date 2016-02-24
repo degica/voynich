@@ -13,4 +13,10 @@ ActiveRecord::Schema.define do
     t.string :uuid
     t.text :ciphertext
   end
+
+  create_table(:voynich_active_model_targets) do |t|
+    t.string :uuid
+    t.integer :voynich_secret_value_id
+    t.integer :voynich_auth_secret_value_id
+  end
 end
