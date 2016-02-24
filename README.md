@@ -68,7 +68,8 @@ model.secret_data = {card_number: '1234567890123456'}
 model.save
 
 # You can see the UUID of the voynich data is assigned
-model.voynich_secret_data_uuid # => "131cd6e8-03da-48f7-bf99-672429c94e3f"
+model.voynich_secret_data_value
+# => #<Voynich::ActiveRecord::Value id: 1, data_key_id: 1, uuid: "...", ciphertext: "{\"c\":\"chD9hCWePs+Cqg...">
 
 # You can get decrypted data just like a normal attribute
 model.secret_data # => {card_number: '1234567890123456'}
