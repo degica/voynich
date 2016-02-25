@@ -5,7 +5,7 @@ module Voynich
 
       attr_writer :plaintext
 
-      has_many :values, class_name: "Voynich::ActiveRecord::Value"
+      has_many :values, class_name: "Voynich::ActiveRecord::Value", dependent: :destroy
 
       validates :name, presence: true, uniqueness: true
       validates :cmk_id, presence: true
