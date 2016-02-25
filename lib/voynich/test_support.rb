@@ -1,5 +1,5 @@
 module Voynich
-  module SpecSupport
+  module TestSupport
     module StubKMS
       def stub_kms_request
         allow(Voynich).to receive(:kms_client) do
