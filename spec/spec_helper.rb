@@ -1,11 +1,12 @@
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 require 'voynich'
+require 'voynich/test_support'
 require 'database_cleaner'
 
 Dir[File.dirname(__FILE__) + "/support/**/*.rb"].each { |f| require f }
 
 RSpec.configure do |config|
-  config.include Voynich::SpecSupport::StubKMS
+  config.include Voynich::TestSupport::StubKMS
 
   config.before(:suite) do
     DatabaseCleaner.strategy = :transaction
