@@ -7,16 +7,12 @@ Voynich is a secret storage library for Ruby on Rails backed by Amazon Key Manag
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'voynich'
+gem 'voynich', github: 'degica/voynich'
 ```
 
 And then execute:
 
     $ bundle
-
-Or install it yourself as:
-
-    $ gem install voynich
     
 ### Generate Migration File
 
