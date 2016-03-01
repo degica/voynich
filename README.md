@@ -89,3 +89,10 @@ model.secret_data # => {card_number: '1234567890123456'}
 - [ ] Path based tree structure
 - [ ] S3 adapter
 
+## Contributing
+
+Bug reports and pull requests are welcome on GitHub at https://github.com/degica/voynich.
+
+## License
+
+The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
