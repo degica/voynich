@@ -7,16 +7,12 @@ Voynich is a secret storage library for Ruby on Rails backed by Amazon Key Manag
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'voynich'
+gem 'voynich', github: 'degica/voynich'
 ```
 
 And then execute:
 
     $ bundle
-
-Or install it yourself as:
-
-    $ gem install voynich
     
 ### Generate Migration File
 
@@ -38,6 +34,12 @@ Voynich.configure(
 
 ## Usage
 
+Voynich provides 2 types of interfaces.
+
+### Storage interface
+
+`Storage` provides generic accessors for encrypted attributes.
+
 ```ruby
 ## Create new encrypted data
 ### `create` method creates a new data key using KMS API and save the encrypted version of the key,
@@ -53,14 +55,16 @@ data = Voynich::Storage.new.decrypt(uuid)
 
 ### ActiveModel integration
 
-```ruby
-class SomeModel < ActiveRecord::Base
-  include Voynich::ActiveModel::Model
-  
-  voynich_attribute :secret_data
-end
+If you use Voynich with ActiveRecord models, you can use `Voynich::ActiveModel::Model` module to integrate your model with Voynich tables. 
 
-model = SomeModel.new
+To use the module, run the following command. It will generate a migration file and add some lines to your model file.
+
+    $ rails g voynich:model_attribute YourModel model_attribute
+    
+Now the attribute is managed by Voynich
+
+```ruby
+model = YourModel.new
 # You can assign any type of data
 model.secret_data = {card_number: '1234567890123456'}
 
@@ -77,6 +81,14 @@ model.secret_data # => {card_number: '1234567890123456'}
 
 ## TODO
 
-- [] Data key rotation
-- [] Path based tree structure
-- [] S3 adapter
+- [ ] Data key rotation
+- [ ] Path based tree structure
+- [ ] S3 adapter
+
+## Contributing
+
+Bug reports and pull requests are welcome on GitHub at https://github.com/degica/voynich.
+
+## License
+
+The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
