@@ -3,8 +3,9 @@ cache:
   bundler: true
 sudo: false
 rvm:
-- 2.2.5
-- 2.3.1
+- 2.3.7
+- 2.4.4
+- 2.5.1
 env:
   matrix:
   - AR_VERSION=4.2
