@@ -29,6 +29,8 @@ module Voynich
       end
 
       def secret
+        # For backward compatibility, we need to encode secret before passing it to the openssl lib.
+        # See https://github.com/degica/voynich/pull/11
         Base64.strict_encode64(encrypter.secret)
       end
     end
