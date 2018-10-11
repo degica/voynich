@@ -9,6 +9,8 @@ env:
   matrix:
   - AR_VERSION=4.2
   - AR_VERSION=5.0
+  - AR_VERSION=5.1
+  - AR_VERSION=5.2
 script:
 - bundle exec rspec
 notifications:
