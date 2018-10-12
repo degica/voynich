@@ -4,6 +4,7 @@ require "voynich/kms_data_key_client"
 require "voynich/active_model/model"
 require "voynich/storage"
 require "voynich/aes"
+require "voynich/encrypter"
 
 require 'aws-sdk'
 require 'active_support/core_ext/module/attribute_accessors'

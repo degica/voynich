@@ -14,8 +14,8 @@ module Voynich
       before_validation :generate_data_key, if: -> (m) { m.ciphertext.nil? }
 
       def reencrypt!
-        result = client.reencrypt(ciphertext)
-        self.ciphertext = result.ciphertext
+        result = client.reencrypt(decode(ciphertext))
+        self.ciphertext = encode(result.ciphertext)
         save!
       end
 
@@ -37,14 +37,22 @@ module Voynich
 
       def generate_data_key
         result = client.generate
-        self.ciphertext = result.ciphertext
+        self.ciphertext = encode(result.ciphertext)
         self.plaintext  = result.plaintext
       end
 
       def decrypt_data_key
-        result = client.decrypt(ciphertext)
-        self.ciphertext = result.ciphertext
+        result = client.decrypt(decode(ciphertext))
+        self.ciphertext = encode(result.ciphertext)
         self.plaintext  = result.plaintext
+      end
+
+      def encode(data)
+        Base64.strict_encode64(data)
+      end
+
+      def decode(data)
+        Base64.decode64(data)
       end
     end
   end

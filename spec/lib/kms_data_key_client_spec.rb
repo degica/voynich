@@ -17,9 +17,7 @@ module Voynich
     end
 
     def result(plain_blob, cipher_blob)
-      plain  = plain_blob.nil?  ? nil : Base64.strict_encode64(plain_blob)
-      cipher = cipher_blob.nil? ? nil : Base64.strict_encode64(cipher_blob)
-      described_class::Result.new(plain, cipher)
+      described_class::Result.new(plain_blob, cipher_blob)
     end
 
     describe "#generate" do
@@ -29,7 +27,7 @@ module Voynich
     end
 
     describe "#decrypt" do
-      subject { kms_data_key_client.decrypt(Base64.strict_encode64("ciphertext blob")) }
+      subject { kms_data_key_client.decrypt("ciphertext blob") }
       it { is_expected.to eq result("decrypted plaintext blob", "ciphertext blob") }
     end
 

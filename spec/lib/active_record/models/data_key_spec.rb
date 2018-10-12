@@ -6,20 +6,20 @@ module Voynich::ActiveRecord
 
     before do
       allow_any_instance_of(Voynich::KMSDataKeyClient).to receive(:generate) {
-        Voynich::KMSDataKeyClient::Result.new("encoded generated plaintext", "encoded generated ciphertext")
+        Voynich::KMSDataKeyClient::Result.new("generated plaintext", "generated ciphertext")
       }
       allow_any_instance_of(Voynich::KMSDataKeyClient).to receive(:decrypt) {
-        Voynich::KMSDataKeyClient::Result.new("encoded decrypted plaintext", "encoded ciphertext")
+        Voynich::KMSDataKeyClient::Result.new("decrypted plaintext", "ciphertext")
       }
       allow_any_instance_of(Voynich::KMSDataKeyClient).to receive(:reencrypt) {
-        Voynich::KMSDataKeyClient::Result.new(nil, "encoded reencrypted ciphertext")
+        Voynich::KMSDataKeyClient::Result.new(nil, "reencrypted ciphertext")
       }
     end
 
     describe "#reencrypt!" do
       it "re-encrypt and save ciphertext" do
         data_key.reencrypt!
-        expect(data_key.ciphertext).to eq "encoded reencrypted ciphertext"
+        expect(data_key.ciphertext).to eq Base64.strict_encode64("reencrypted ciphertext")
       end
     end
 
@@ -35,12 +35,12 @@ module Voynich::ActiveRecord
 
       context "when ciphertext doesn't exist" do
         let(:data_key) { DataKey.new(name: 'data_key', cmk_id: Voynich.kms_cmk_id) }
-        it { is_expected.to eq "encoded generated plaintext" }
+        it { is_expected.to eq "generated plaintext" }
       end
 
       context "when ciphertext exists" do
         before { data_key }
-        it { expect(DataKey.first.plaintext).to eq "encoded decrypted plaintext" }
+        it { expect(DataKey.first.plaintext).to eq "decrypted plaintext" }
       end
     end
   end

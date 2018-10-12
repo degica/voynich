@@ -17,26 +17,19 @@ module Voynich
       before_validation :encrypt
 
       def decrypt
-        encrypted_data = JSON.parse(self.ciphertext, symbolize_names: true)
-        @plain_value = AES.new(data_key.plaintext, (context || {}).to_json).decrypt(
-          encrypted_data[:c],
-          iv: encrypted_data[:iv],
-          tag: encrypted_data[:t]
-        )
+        self.plain_value = encrypter.decrypt(self.ciphertext)
       end
 
       def encrypt
         return if plain_value.nil?
-        encrypted = AES.new(data_key.plaintext, (context || {}).to_json).encrypt(plain_value)
-        self.ciphertext = {
-          c:  encrypted[:content],
-          t:  encrypted[:tag],
-          iv: encrypted[:iv],
-          ad: encrypted[:auth_data]
-        }.to_json
+        self.ciphertext = encrypter.encrypt(plain_value)
       end
 
       private
+
+      def encrypter
+        @encrypter ||= Encrypter.new(data_key.plaintext, (context || {}).to_json)
+      end
 
       def find_or_create_data_key
         if data_key.nil?
