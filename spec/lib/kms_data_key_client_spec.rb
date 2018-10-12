@@ -16,10 +16,6 @@ module Voynich
       end
     end
 
-    def encode(d)
-      Base64.strict_encode64(d)
-    end
-
     def result(plain_blob, cipher_blob)
       described_class::Result.new(plain_blob, cipher_blob)
     end
