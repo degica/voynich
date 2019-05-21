@@ -8,7 +8,8 @@ module Voynich
       end
 
       def encrypt(plaintext)
-        enc = AES.new(secret[0..31], encrypter.auth_data).encrypt(plaintext)
+        enc = AES.new(secret[0..31], encrypter.auth_data, serializer: encrypter.serializer).
+                encrypt(plaintext)
         {
           v:  version,
           c:  enc[:content],
@@ -20,7 +21,7 @@ module Voynich
 
       def decrypt(enc)
         AES
-          .new(secret[0..31], encrypter.auth_data)
+          .new(secret[0..31], encrypter.auth_data, serializer: encrypter.serializer)
           .decrypt(enc["c"], iv: enc["iv"], tag: enc["t"])
       end
 
@@ -45,11 +46,12 @@ module Voynich
       end
     end
 
-    attr_accessor :secret, :auth_data
+    attr_accessor :secret, :auth_data, :serializer
 
-    def initialize(secret, adata)
+    def initialize(secret, adata, serializer: nil)
       @secret = secret
       @auth_data = adata
+      @serializer = serializer
     end
 
     def encrypt(plaintext, version: 2)

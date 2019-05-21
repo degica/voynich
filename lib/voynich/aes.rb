@@ -7,10 +7,10 @@ module Voynich
     CIPHER_MODE = 'aes-256-gcm'
     DEFAULT_SERIALIZER = Marshal
 
-    def initialize(secret, adata, serializer: DEFAULT_SERIALIZER)
+    def initialize(secret, adata, serializer:)
       @secret = secret
       @auth_data = adata
-      @serializer = serializer
+      @serializer = serializer || DEFAULT_SERIALIZER
     end
 
     def encrypt(plaintext)

@@ -29,6 +29,7 @@ module Voynich
           value = send(column_name) || send("build_#{column_name}")
           value.context = voynich_context(name)
           value.plain_value = iv
+          value.serializer = options[:serializer]
           value.save!
         end
       end
@@ -36,7 +37,8 @@ module Voynich
       VOYNICH_DEFAULT_OPTIONS = {
         column_prefix: 'voynich_',
         column_suffix: '_value',
-        context: nil
+        context: nil,
+        serializer: nil
       }
 
       module ClassMethods
@@ -66,6 +68,7 @@ module Voynich
             return iv unless iv.nil?
             return nil if value.nil?
             value.context = voynich_context(name)
+            value.serializer = options[:serializer]
             instance_variable_set(:"@#{name}", value.decrypt)
           end
 
