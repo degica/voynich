@@ -10,7 +10,10 @@ module Voynich::ActiveModel
       t.uuid ||= SecureRandom.hex
     end
 
-    voynich_attribute :secret
+    # JSON serializer, no context
+    voynich_attribute :secret, serializer: JSON
+
+    # Marshal serializer (default), with context
     voynich_attribute :auth_secret, context: ->(m) { {uuid: m.uuid} }
   end
 
@@ -49,6 +52,7 @@ module Voynich::ActiveModel
         it "stores secret in voynich table" do
           expect(Voynich::ActiveRecord::Value.count).to eq 1
           value = Voynich::ActiveRecord::Value.first
+          value.serializer = JSON
           expect(value.decrypt).to eq "super secret information"
           expect(value.data_key).to be_a Voynich::ActiveRecord::DataKey
         end
@@ -60,6 +64,7 @@ module Voynich::ActiveModel
 
           expect(Voynich::ActiveRecord::Value.count).to eq 1
           value = Voynich::ActiveRecord::Value.first
+          value.serializer = JSON
           expect(value.decrypt).to eq "yet another secret information"
         end
 

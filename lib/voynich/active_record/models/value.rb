@@ -5,7 +5,7 @@ module Voynich
     class Value < ::ActiveRecord::Base
       self.table_name_prefix = 'voynich_'
 
-      attr_accessor :plain_value, :context
+      attr_accessor :plain_value, :context, :serializer
 
       belongs_to :data_key, required: true, class_name: "Voynich::ActiveRecord::DataKey"
 
@@ -28,7 +28,7 @@ module Voynich
       private
 
       def encrypter
-        @encrypter ||= Encrypter.new(data_key.plaintext, (context || {}).to_json)
+        @encrypter ||= Encrypter.new(data_key.plaintext, (context || {}).to_json, serializer: serializer)
       end
 
       def find_or_create_data_key
