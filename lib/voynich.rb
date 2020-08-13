@@ -28,10 +28,11 @@ module Voynich
     self.aws_access_key_id = config[:aws_access_key_id]
     self.aws_secret_access_key = config[:aws_secret_access_key]
     self.aws_region = config[:aws_region]
+    @@kms_client = nil
   end
 
   def self.kms_client
-    if self.aws_access_key_id.present?
+    @@kms_client ||= if self.aws_access_key_id.present?
       credentials = Aws::Credentials.new(self.aws_access_key_id, self.aws_secret_access_key)
       Aws::KMS::Client.new(region: self.aws_region, credentials: credentials)
     else
