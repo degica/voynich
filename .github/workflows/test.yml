@@ -3,31 +3,6 @@ name: test
 on: [push, pull_request]
 jobs:
   test:
-    if: github.ref != 'refs/heads/master' 
-    runs-on: ubuntu-18.04
-    strategy:
-      matrix:
-        ruby_version:
-          - 2.6
-        ar_version:
-          - 5.2
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up Ruby
-      uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: ${{ matrix.ruby_version }}
-    - name: Setup
-      env:
-        AR_VERSION: ${{ matrix.ar_version}}
-      run: bundle install
-    - name: script
-      run: |-
-        set -e
-        bundle exec rspec
-
-  matrix-test:
-    if: github.ref == 'refs/heads/master' 
     runs-on: ubuntu-18.04
     strategy:
       matrix:
