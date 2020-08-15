@@ -19,6 +19,24 @@ module Voynich
         save!
       end
 
+      def rotate!
+        self.class.transaction do
+          vs = values.to_a
+          vs.each do |v|
+            v.context = JSON.parse(JSON.parse(v.ciphertext)["ad"])
+            v.decrypt
+          end
+
+          generate_data_key
+          save!
+
+          vs.each do |v|
+            v.encrypt
+            v.save!
+          end
+        end
+      end
+
       def plaintext
         return @plaintext unless @plaintext.nil?
         if ciphertext.nil?
