@@ -51,7 +51,7 @@ module Voynich
           "#{options[:column_prefix]}#{name}#{options[:column_suffix]}"
         end
 
-        def voynich_attribute(name, options = {})
+        def voynich_attribute(name, **options)
           options = VOYNICH_DEFAULT_OPTIONS.merge(options)
           voynich_targets[name.to_sym] = options
           asoc_options = options.
