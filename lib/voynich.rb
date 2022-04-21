@@ -22,7 +22,7 @@ module Voynich
     aws_region: 'us-east-1'
   }
 
-  def self.configure(**config)
+  def self.configure(config = {})
     config = DEFAULT_CONFIG.merge(config)
     self.kms_cmk_id = config[:kms_cmk_id]
     self.auto_data_key_count = config[:auto_data_key_max_count]
