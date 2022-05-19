@@ -58,7 +58,7 @@ module Voynich
                          merge(class_name: "::Voynich::ActiveRecord::Value").
                          reject{|k| VOYNICH_DEFAULT_OPTIONS.keys.include? k}
 
-          belongs_to :"#{voynich_column_name(name)}", asoc_options
+          belongs_to :"#{voynich_column_name(name)}", **asoc_options
 
           private :"#{voynich_column_name(name)}="
 

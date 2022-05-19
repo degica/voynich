@@ -24,4 +24,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency "aws-sdk-kms", "~> 1.36"
   spec.add_dependency "activesupport", ">= 4.2"
   spec.add_dependency "activerecord", ">= 4.2"
+  spec.add_dependency "libxml-ruby"
 end

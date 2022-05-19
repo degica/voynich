@@ -6,6 +6,7 @@ require "voynich/storage"
 require "voynich/aes"
 require "voynich/encrypter"
 
+require 'xml'
 require 'aws-sdk-kms'
 require 'active_support/core_ext/module/attribute_accessors'
 
